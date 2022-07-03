@@ -7,7 +7,12 @@ defmodule BuiltApiWeb.Router do
 
   scope "/api", BuiltApiWeb do
     pipe_through :api
+
+    scope "/auth" do
+      post "/register", UserController, :register
+    end
   end
+  
 
   # Enables LiveDashboard only for development
   #
