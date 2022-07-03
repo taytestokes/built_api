@@ -40,3 +40,10 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+# Configure the app to use the guardian implementation module
+# that was built with the neccessary callback functions
+# for storing and retreiving users in the JWT subject
+config :built_api, BuiltApi.Auth.Guardian,
+  issuer: "built_api",
+  secret_key: System.get_env("GUARDIAN_SECRET_KEY")

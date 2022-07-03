@@ -9,7 +9,7 @@ defmodule BuiltApiWeb.Router do
     pipe_through :api
 
     scope "/auth" do
-      post "/register", UserController, :register
+      post "/register", AuthController, :register
     end
   end
   
