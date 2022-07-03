@@ -5,6 +5,10 @@ defmodule BuiltApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug BuiltApi.Auth.Pipeline
+  end
+
   scope "/api", BuiltApiWeb do
     pipe_through :api
 

@@ -8,7 +8,7 @@ defmodule BuiltApi.Auth.ErrorHandler do
     @impl Guardian.Plug.ErrorHandler
 
     def auth_error(conn, {type, _reason}, _opts) do
-        body = Jason.encode!(${error: to_string(type)})
+        body = Jason.encode!(%{error: to_string(type)})
 
         # Since this is a JSON based API, we will return
         # JSON data for the error instead of plain text
