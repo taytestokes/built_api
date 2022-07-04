@@ -8,4 +8,4 @@ The value for the `secret_key` being used in the configuration can be generated 
 
 ## CORS
 
-This API utilizes cors_plug to handle CORS (Cross Origin Resource Sharing) requests. Basically, it allows the React client to talk to the API.
+This API utilizes Corsica to handle CORS (Cross Origin Resource Sharing) requests. Basically, it allows the React client to talk to the API. A custom plug is created to configure the allowed response headers.

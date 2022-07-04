@@ -44,7 +44,9 @@ defmodule BuiltApiWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+
   # Allow CORS requests
-  plug CORSPlug
+  plug CORSPlug, origin: ["http://localhost:3000"]
+ 
   plug BuiltApiWeb.Router
 end
