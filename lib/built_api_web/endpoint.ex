@@ -44,5 +44,7 @@ defmodule BuiltApiWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+  # Allow CORS requests
+  plug CORSPlug
   plug BuiltApiWeb.Router
 end

@@ -30,11 +30,8 @@ defmodule BuiltApiWeb.AuthController do
     end
 
     def login(conn, %{"user" => user_params}) do
-        # Create access token and and store it in the session
-        # to act as authenticated
     end
 
     def signout(conn, _assigns) do
-        # Clears token stored in api memory - make sure to write logic to remove this shit on frontend
     end
 end

@@ -9,12 +9,19 @@ defmodule BuiltApiWeb.Router do
     plug BuiltApi.Auth.Pipeline
   end
 
+  # Public API Endpoints
   scope "/api", BuiltApiWeb do
     pipe_through :api
 
     scope "/auth" do
       post "/register", AuthController, :register
     end
+  end
+
+  # Protected API Endpouints
+  scope "/api", BuiltApiWeb do
+    # :auth pipeline will check for access token in the req headers
+    pipe_through [:api, :auth]
   end
   
 
