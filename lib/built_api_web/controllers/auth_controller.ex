@@ -16,7 +16,7 @@ defmodule BuiltApiWeb.AuthController do
                 # Store refresh token in the response cookie
                 # Render the JSON view to send a response to the client
                 conn
-                |> put_resp_cookie("ruid", refresh_token)
+                |> put_resp_cookie("ruid", refresh_token, http_only: true)
                 |> render("register.json", user_id: user.id, user_email: user.email, access_token: access_token)
             
             {:error, %Ecto.Changeset{} = changeset} ->
@@ -37,6 +37,7 @@ defmodule BuiltApiWeb.AuthController do
                     Guardian.encode_and_sign(user, %{}, token_type: "refresh", ttl: {7, :day})
                 
                 conn
+                |> put_resp_cookie("ruid", refresh_token, http_only: true)
                 |> render("login.json", user_id: user.id, user_email: user.email, access_token: access_token)
 
             {:error, %Ecto.Changeset{} = changeset} ->
@@ -46,20 +47,23 @@ defmodule BuiltApiWeb.AuthController do
         end
     end
 
+    # Refreshes the accessToken using the refreshToken stored in the httpOnly cookies
+    # and it also retrieves the user resource that was was to encode the JWT and 
+    # returns the user info back to the client
     def refresh_access_token(conn, _params) do
         refresh_token = Plug.Conn.fetch_cookies(conn) |> Map.from_struct() |> get_in([:cookies, "ruid"])
-        IO.inspect(refresh_token)
+        {:ok, user, _claims} =
+            Guardian.resource_from_token(refresh_token)
+
         case Guardian.exchange(refresh_token, "refresh", "access") do
             {:ok, _old_token, {new_access_token, _new_claims}} ->
                 conn
                 |> put_status(:created)
-                |> render("refresh_access_token.json", access_token: new_access_token)
+                |> render("refresh_access_token.json", user_id: user.id, user_email: user.email, access_token: new_access_token)
 
             {:error, reason} ->
-                # body = Jason.encode!(%{error: "Failed to create a new acess token."})
-                IO.inspect(reason)
                 conn
-                |> send_resp(401, "")
+                |> send_resp(401, reason)
         end
     end
 

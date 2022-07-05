@@ -6,9 +6,9 @@ defmodule BuiltApi.Auth.Pipeline do
         error_handler: BuiltApi.Auth.ErrorHandler
     
     # If there is a session token, restrict it to an access token and validate it
-    plug Guardian.Plug.VerifySession, claims: %{"typ" => "access"}
+    plug Guardian.Plug.VerifySession, claims: %{"typ" => "access"}, realm: "Bearer"
     # If there is a header token, restrict it to an access token and validate it
-    plug Guardian.Plug.VerifyHeader, claims: %{"typ" => "access"}
+    plug Guardian.Plug.VerifyHeader, claims: %{"typ" => "access"}, realm: "Bearer"
     # Load the user if either verifcation has worked
-    plug Guardian.Plug.LoadResource, allow_blank: true
+    plug Guardian.Plug.LoadResource
 end

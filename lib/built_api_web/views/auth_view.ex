@@ -20,9 +20,11 @@ defmodule BuiltApiWeb.AuthView do
   end
 
   # Returns a new access token created from exchanging a valid refresh token
-  def render("refresh_access_token.json", %{access_token: access_token}) do
+  def render("refresh_access_token.json", %{user_id: user_id, user_email: user_email, access_token: access_token}) do
     %{
-      access_token: access_token
+      user_id: user_id,
+      user_email: user_email,
+      access_token: access_token,
     }
   end
 end

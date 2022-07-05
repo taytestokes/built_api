@@ -16,6 +16,7 @@ defmodule BuiltApiWeb.Router do
     scope "/auth" do
       post "/login", AuthController, :login
       post "/register", AuthController, :register
+      get "/refresh", AuthController, :refresh_access_token
     end
   end
 
