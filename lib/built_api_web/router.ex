@@ -25,7 +25,6 @@ defmodule BuiltApiWeb.Router do
     # :auth pipeline will check for access token in the req headers
     pipe_through [:api, :auth]
   end
-  
 
   # Enables LiveDashboard only for development
   #

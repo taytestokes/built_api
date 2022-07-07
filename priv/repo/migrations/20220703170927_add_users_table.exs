@@ -5,10 +5,10 @@ defmodule BuiltApi.Repo.Migrations.AddUsersTable do
     create table(:users) do
       add(:email, :string)
       add(:password_hash, :string)
-      
-      timestamps() 
+
+      timestamps()
     end
-    
+
     create(unique_index(:users, [:email]))
   end
 end

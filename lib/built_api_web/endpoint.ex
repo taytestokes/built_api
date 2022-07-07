@@ -47,6 +47,6 @@ defmodule BuiltApiWeb.Endpoint do
 
   # Allow CORS requests
   plug CORSPlug, origin: ["http://localhost:3000"]
- 
+
   plug BuiltApiWeb.Router
 end
