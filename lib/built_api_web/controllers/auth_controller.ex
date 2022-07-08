@@ -24,12 +24,7 @@ defmodule BuiltApiWeb.AuthController do
       {:error, %Ecto.Changeset{} = changeset} ->
         # WARNING: This only handles when there is one changeset error present
         # Will have to rethink this logic to handle multiple changeset errors
-        error_message =
-          Enum.reduce(changeset.errors, "", fn error, accum ->
-            {field, {message, _reasons}} = error
-            accum = "#{field} #{message}"
-          end)
-
+        error_message = handle_error_message(changeset.errors)
         # Send back a 500 status error with the error messages
         conn
         |> send_resp(500, Jason.encode!(%{error: error_message}))
@@ -57,12 +52,7 @@ defmodule BuiltApiWeb.AuthController do
         )
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        error_message =
-          Enum.reduce(changeset.errors, "", fn error, accum ->
-            {field, {message, _reasons}} = error
-            accum = "#{field} #{message}"
-          end)
-
+        error_message = handle_error_message(changeset.errors)
         # Send back a 500 status error with the error messages
         conn
         |> send_resp(500, Jason.encode!(%{error: error_message}))
@@ -101,5 +91,13 @@ defmodule BuiltApiWeb.AuthController do
     conn
     |> delete_resp_cookie("ruid")
     |> send_resp(200, body)
+  end
+
+
+  defp handle_error_message(errors) do
+    Enum.reduce(errors, "", fn error, accum ->
+        {field, {message, _reasons}} = error
+        accum = "#{field} #{message}"
+    end)
   end
 end
