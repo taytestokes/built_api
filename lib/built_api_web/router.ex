@@ -24,6 +24,10 @@ defmodule BuiltApiWeb.Router do
   scope "/api", BuiltApiWeb do
     # :auth pipeline will check for access token in the req headers
     pipe_through [:api, :auth]
+
+    scope "/auth" do
+      delete "/signout", AuthController, :sign_out
+    end
   end
 
   # Enables LiveDashboard only for development

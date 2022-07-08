@@ -85,12 +85,10 @@ defmodule BuiltApiWeb.AuthController do
     end
   end
 
-  def signout(conn, _assigns) do
-    body = Jason.encode!(%{message: "Successfully signed out."})
-    # Clear the regresh token stored in cookies
+  def sign_out(conn, _assigns) do
     conn
     |> delete_resp_cookie("ruid")
-    |> send_resp(200, body)
+    |> send_resp(200, "Successfully signed out!")
   end
 
 
