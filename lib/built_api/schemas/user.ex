@@ -2,10 +2,12 @@ defmodule BuiltApi.Schemas.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  # Creayes an ecto based user struct that can be 
+  # Creates an ecto based user struct that can be 
   # passed to changesets for validation and then
   # gets inserted into the database
   schema "users" do
+    field(:first_name, :string)
+    field(:last_name, :string)
     field(:email, :string)
     field(:password, :string, virtual: true)
     field(:password_hash, :string)
@@ -18,9 +20,11 @@ defmodule BuiltApi.Schemas.User do
   # into the database
   def registration_changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password])
-    |> validate_required([:email, :password])
+    |> cast(attrs, [:first_name, :last_name, :email, :password])
+    |> validate_required([:first_name, :last_name, :email, :password])
     |> down_case_email()
+    |> down_case_first_name()
+    |> down_case_last_name()
     |> unique_constraint(:email)
     |> hash_password()
   end
@@ -39,12 +43,24 @@ defmodule BuiltApi.Schemas.User do
     end
   end
 
-  # Downcases the email to make it easier to access
-  # without having to worry about capitalizations
   defp down_case_email(changeset) do
     case get_field(changeset, :email) do
       nil -> changeset
       email -> put_change(changeset, :email, String.downcase(email))
+    end
+  end
+
+  defp down_case_first_name(changeset) do
+    case get_field(changeset, :first_name) do
+      nil -> changeset
+      first_name -> put_change(changeset, :first_name, String.downcase(first_name))
+    end
+  end
+
+  defp down_case_last_name(changeset) do
+    case get_field(changeset, :last_name) do
+      nil -> changeset
+      last_name -> put_change(changeset, :last_name, String.downcase(last_name))
     end
   end
 end

@@ -14,10 +14,12 @@ defmodule BuiltApiWeb.AuthController do
           Guardian.encode_and_sign(user, %{}, token_type: "refresh", ttl: {7, :day})
 
         conn
-        |> put_resp_cookie("ruid", refresh_token, http_only: true)
+        |> put_resp_cookie("refresh_token", refresh_token, http_only: true)
         |> render("register.json",
-          user_id: user.id,
-          user_email: user.email,
+          id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
           access_token: access_token
         )
 
@@ -44,10 +46,12 @@ defmodule BuiltApiWeb.AuthController do
           Guardian.encode_and_sign(user, %{}, token_type: "refresh", ttl: {7, :day})
 
         conn
-        |> put_resp_cookie("ruid", refresh_token, http_only: true)
+        |> put_resp_cookie("refresh_token", refresh_token, http_only: true)
         |> render("login.json",
-          user_id: user.id,
-          user_email: user.email,
+          id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
           access_token: access_token
         )
 
@@ -65,18 +69,19 @@ defmodule BuiltApiWeb.AuthController do
   # returns the user info back to the client
   def refresh_access_token(conn, _params) do
     refresh_token =
-      Plug.Conn.fetch_cookies(conn) |> Map.from_struct() |> get_in([:cookies, "ruid"])
+      Plug.Conn.fetch_cookies(conn) |> Map.from_struct() |> get_in([:cookies, "refresh_token"])
 
     {:ok, user, _claims} = Guardian.resource_from_token(refresh_token)
 
     case Guardian.exchange(refresh_token, "refresh", "access") do
-      {:ok, _old_token, {new_access_token, _new_claims}} ->
+      {:ok, _old_token, {access_token, _new_claims}} ->
         conn
-        |> put_status(:created)
         |> render("refresh_access_token.json",
-          user_id: user.id,
-          user_email: user.email,
-          access_token: new_access_token
+          id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          access_token: access_token
         )
 
       {:error, reason} ->
@@ -91,11 +96,10 @@ defmodule BuiltApiWeb.AuthController do
     |> send_resp(200, "Successfully signed out!")
   end
 
-
   defp handle_error_message(errors) do
     Enum.reduce(errors, "", fn error, accum ->
-        {field, {message, _reasons}} = error
-        accum = "#{field} #{message}"
+      {field, {message, _reasons}} = error
+      accum = "#{field} #{message}"
     end)
   end
 end
