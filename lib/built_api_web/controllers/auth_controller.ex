@@ -4,6 +4,7 @@ defmodule BuiltApiWeb.AuthController do
   alias BuiltApi.Models.Users
   alias BuiltApi.Auth.Guardian
 
+  # NEXT STEPS: Rethink how errors should be handled?
   def register(conn, %{"user" => user_params}) do
     case Users.create_user(user_params) do
       {:ok, user} ->
