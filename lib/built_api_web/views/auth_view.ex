@@ -29,10 +29,12 @@ defmodule BuiltApiWeb.AuthView do
         access_token: access_token
       }) do
     %{
-      id: id,
-      first_name: first_name,
-      last_name: last_name,
-      email: email,
+      user: %{
+        id: id,
+        first_name: first_name,
+        last_name: last_name,
+        email: email
+      },
       access_token: access_token
     }
   end
